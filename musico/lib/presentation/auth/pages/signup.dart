@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:spotify_clone/core/config/theme/app_colors.dart';
-import 'package:spotify_clone/presentation/auth/pages/login.dart';
+import 'package:musico/core/config/theme/app_colors.dart';
+import 'package:musico/data/service/auth_service.dart';
+import 'package:musico/presentation/auth/pages/login.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -12,6 +13,8 @@ class Signup extends StatefulWidget {
 class _SignupState extends State<Signup> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
 
@@ -45,6 +48,12 @@ class _SignupState extends State<Signup> {
                 children: [
                   _registerText(),
                   const SizedBox(height: 40),
+                  _username(),
+                  const SizedBox(height: 20),
+
+                  _name(),
+                  const SizedBox(height: 20),
+
                   _emailField(),
                   const SizedBox(height: 20),
                   _passwordField(),
@@ -119,13 +128,29 @@ class _SignupState extends State<Signup> {
     return null; // Return null if the input is valid
   }
 
+  String? validateUsername(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter your Username';
+    }
+    // Check if username exists TODO:
+
+    return null; // Return null if the input is valid
+  }
+
+  String? validateName(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter your Username';
+    }
+    // Check if username exists TODO:
+
+    return null; // Return null if the input is valid
+  }
+
   String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'Please enter your password';
     }
-    if (value.length < 8) {
-      return 'Password must be at least 8 characters long';
-    }
+
     return null; // Return null if the input is valid
   }
 
@@ -146,6 +171,46 @@ class _SignupState extends State<Signup> {
       keyboardType: TextInputType.emailAddress,
       decoration: InputDecoration(
         labelText: 'Email',
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: AppColors.primary, width: 2),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: AppColors.primary, width: 2),
+        ),
+        floatingLabelStyle: TextStyle(color: AppColors.primary),
+      ),
+    );
+  }
+
+  Widget _username() {
+    return TextFormField(
+      controller: _usernameController,
+      validator: validateUsername,
+      keyboardType: TextInputType.name,
+      decoration: InputDecoration(
+        labelText: 'Username',
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: AppColors.primary, width: 2),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: AppColors.primary, width: 2),
+        ),
+        floatingLabelStyle: TextStyle(color: AppColors.primary),
+      ),
+    );
+  }
+
+  Widget _name() {
+    return TextFormField(
+      controller: _nameController,
+      validator: validateName,
+      keyboardType: TextInputType.name,
+      decoration: InputDecoration(
+        labelText: 'Name',
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(color: AppColors.primary, width: 2),
@@ -197,18 +262,24 @@ class _SignupState extends State<Signup> {
     );
   }
 
-  Widget _signupButton(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {
-        if (_formKey.currentState!.validate()) {
-          print(_emailController.text);
+Widget _signupButton(BuildContext context) {
+  return ElevatedButton(
+    onPressed: () async {
+      if (!_formKey.currentState!.validate()) return;
 
+      try {
+        final res = await AuthService.register(
+          email:_emailController.text,
+          password:_passwordController.text,
+          username:_usernameController.text,
+          name :_nameController.text,
+        );
+
+        if (res['ok'] == true) {
           final snackBar = SnackBar(
             shape: RoundedRectangleBorder(
-              // Set the radius of the corners
-              borderRadius: BorderRadius.circular(20), // <-- Adjust this value
+              borderRadius: BorderRadius.circular(20),
             ),
-
             content: Text(
               "SignUp Successful!",
               style: TextStyle(fontWeight: FontWeight.bold),
@@ -222,24 +293,35 @@ class _SignupState extends State<Signup> {
             duration: const Duration(seconds: 3),
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+          // Navigate to home/dashboard
+          // Navigator.pushReplacementNamed(context, '/home');
+        } else {
+          print(res);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(res['message'] ?? "SignUp failed")),
+          );
         }
-      },
-      style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        backgroundColor: Colors.white,
-        textStyle: TextStyle(color: Colors.black),
-
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error: $e")),
+        );
+      }
+    },
+    style: ElevatedButton.styleFrom(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      backgroundColor: Colors.white,
+      foregroundColor: Colors.black,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
+    ),
+    child: const Text(
+      'Sign Up',
+      style: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
       ),
+    ),
+  );
+}
 
-      child: const Text(
-        'Sign Up',
-        style: TextStyle(
-          fontSize: 16,
-          color: Colors.black,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
 }

@@ -3,12 +3,14 @@ import jwt from "jsonwebtoken";
 import { prisma } from "../prisma";
 
 export interface AuthRequest<P = any, ResBody = any, ReqBody = any, ReqQuery = any> extends Request<P, ResBody, ReqBody, ReqQuery> {
-    user?: { id: string }
+    user?: { id: string,email: string }
 }
 
 export const authMiddleware = async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
-        const token = req.cookies?.access_token;
+        const authHeader = req.headers["authorization"];
+        const token = authHeader?.startsWith("Bearer ") ? authHeader.split(" ")[1] : null;
+
         if (!token) {
             res.status(401).json({ message: "No authentication token provided" });
             return
@@ -31,12 +33,8 @@ export const authMiddleware = async (req: AuthRequest, res: Response, next: Next
         });
 
         if (!user) {
-            res.clearCookie("access_token");
-            res.clearCookie("refresh_token");
-
             res.status(401).json({ message: "User not found, tokens cleared." });
             return; 
-
         }
         req.user = user;
         next();

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:spotify_clone/core/config/theme/app_colors.dart';
-import 'package:spotify_clone/presentation/auth/pages/signup.dart';
+import 'package:musico/core/config/theme/app_colors.dart';
+import 'package:musico/data/service/auth_service.dart';
+import 'package:musico/presentation/auth/pages/signup.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -118,9 +119,7 @@ class _LoginState extends State<Login> {
     if (value == null || value.isEmpty) {
       return 'Please enter your password';
     }
-    if (value.length < 8) {
-      return 'Password must be at least 8 characters long';
-    }
+
     return null; // Return null if the input is valid
   }
 
@@ -163,41 +162,86 @@ class _LoginState extends State<Login> {
 
   Widget _signupButton(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {
-        if (_formKey.currentState!.validate()) {
-          print(_emailController.text);
+      onPressed: () async {
+        if (!_formKey.currentState!.validate()) return;
 
-          final snackBar = SnackBar(
-            shape: RoundedRectangleBorder(
-              // Set the radius of the corners
-              borderRadius: BorderRadius.circular(20), // <-- Adjust this value
-            ),
+        final email = _emailController.text.trim();
+        final password = _passwordController.text.trim();
 
-            content: Text(
-              "Login Successful!",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            backgroundColor: AppColors.primary,
-            action: SnackBarAction(
-              label: 'Dismiss',
-              onPressed: () {},
-              textColor: Colors.black,
-            ),
-            duration: const Duration(seconds: 3),
+        try {
+          final res = await AuthService.login(email, password);
+          print("Login response: $res"); // Debug output
+
+          if (res['ok'] == true) {
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Center(
+                  child: Text(
+                    "Login successful!",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                backgroundColor: AppColors.primary,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                behavior:
+                    SnackBarBehavior.floating, // Often used with rounded shapes
+                margin: EdgeInsets.all(16.0),
+                dismissDirection: DismissDirection.down, // Optional: if you want swipe-down dismissal
+                duration: const Duration(
+                  seconds: 3,
+                ), // How long it stays visible
+              ),
+            );
+            // TODO: Navigate to home/dashboard
+          } else {
+            print(res);
+           ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Center(
+                  child: Text(
+                    "Login Failed!",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                backgroundColor: Colors.red,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                behavior:
+                    SnackBarBehavior.floating, // Often used with rounded shapes
+                margin: EdgeInsets.all(16.0),
+                dismissDirection: DismissDirection.down, // Optional: if you want swipe-down dismissal
+                duration: const Duration(
+                  seconds: 3,
+                ), // How long it stays visible
+              ),
+            );
+ 
+          }
+        } catch (e) {
+          print("Login failed: $e"); // Debug output
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Network or server error: $e")),
           );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
       },
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 16),
         backgroundColor: Colors.white,
-        textStyle: TextStyle(color: Colors.black),
-
+        textStyle: const TextStyle(color: Colors.black),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
       ),
-
       child: const Text(
-        'Sign Up',
+        'Login',
         style: TextStyle(
           fontSize: 16,
           color: Colors.black,

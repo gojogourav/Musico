@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
-import 'package:spotify_clone/core/config/theme/app_theme.dart';
-import 'package:spotify_clone/presentation/splash/pages/splash.dart';
+import 'package:musico/core/config/theme/app_theme.dart';
+import 'package:musico/presentation/splash/pages/splash.dart';
 
 
 void main()async{

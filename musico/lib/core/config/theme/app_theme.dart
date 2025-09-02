@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:spotify_clone/core/config/theme/app_colors.dart';
+import 'package:musico/core/config/theme/app_colors.dart';
 
 class AppTheme {
   static final lightTheme = ThemeData(

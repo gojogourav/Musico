@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:spotify_clone/core/config/assets/app_vectors.dart';
-import 'package:spotify_clone/core/config/theme/app_colors.dart';
-import 'package:spotify_clone/presentation/auth/pages/signup.dart';
+import 'package:musico/core/config/assets/app_vectors.dart';
+import 'package:musico/core/config/theme/app_colors.dart';
+import 'package:musico/presentation/auth/pages/signup.dart';
 
 class GetStarted extends StatelessWidget {
   const GetStarted({super.key});

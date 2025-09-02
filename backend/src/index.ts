@@ -7,7 +7,7 @@ import authRouter from './routes/authRoutes';
 import musicRouter from './routes/musicRoutes';
 
 const app = express();
-const PORT = process.env.PORT||5000;
+const PORT = process.env.PORT ? parseInt(process.env.PORT) : 5000;
 dotenv.config();
 
 app.use(express.json());
@@ -29,7 +29,7 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Hello, TypeScript Backend!');
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0",() => {
   console.log(`Server is running at http://localhost:${PORT}`);
 });
 
