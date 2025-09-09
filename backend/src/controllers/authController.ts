@@ -93,7 +93,10 @@ export const loginUser = async (req: Request<{}, {}, LoginUserPayload>, res: Res
             message: "Login successful.", ok: true, user: {
                 email: user.email
             },
-            ...tokens
+            tokens:{
+                ...tokens
+            }
+            
         });
 
 
@@ -151,7 +154,9 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
             user: {
                 email: newUser.email,
             },
-            ...tokens
+            tokens:{
+                ...tokens
+            }
         });
     } catch (error) {
         console.error("Error registering user:", error);
@@ -192,7 +197,7 @@ export const refreshToken = async (req: Request, res: Response) => {
         return res.status(200).json({
             message: "Tokens refreshed successfully.",
             ok: true,
-            tokens: newTokens
+            tokens: {...newTokens}
         });
 
     } catch (error) {

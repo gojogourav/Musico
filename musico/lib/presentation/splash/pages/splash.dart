@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:musico/core/config/assets/app_vectors.dart';
+import 'package:musico/core/assets/app_vectors.dart';
 import 'package:musico/core/config/theme/app_colors.dart';
+import 'package:musico/data/service/auth_service.dart';
+import 'package:musico/presentation/auth/pages/login.dart';
+import 'package:musico/presentation/home/HomePage.dart';
 import 'package:musico/presentation/intro/get_started.dart';
 
 class SplashPage extends StatefulWidget {
@@ -16,7 +19,24 @@ class _SplashPageState extends State<SplashPage> {
   void initState(){
     super.initState();
 
-    redirect();
+    _checkAuthStatus();
+  }
+
+  Future<void> _checkAuthStatus() async {
+    await Future.delayed(const Duration(seconds: 3));
+
+    final access_token = await AuthService.getAccessToken();
+    if(!mounted) return;
+
+    if(access_token!=null){
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context)=> const Homepage()),
+      );
+    }else{
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context)=>const Login()),
+      );
+    }
   }
 
   @override
@@ -38,10 +58,5 @@ class _SplashPageState extends State<SplashPage> {
     );
   }
 
-  Future<void> redirect() async{
-    await Future.delayed(Duration(seconds: 2));
-    Navigator.pushReplacement(context, MaterialPageRoute(
-      builder: (BuildContext context)=> GetStarted()
-    ));
-  }
+  
 }
