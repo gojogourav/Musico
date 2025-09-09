@@ -14,68 +14,100 @@ class _HomePageState extends State<Homepage> {
     super.initState();
   }
 
+  String _getGreeting() {
+    final hour = DateTime.now().hour;
+    if (hour < 12) {
+      return 'Good Morning';
+    }
+    if (hour < 17) {
+      return 'Good Afternoon';
+    }
+    return 'Good Evening';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "👋 Hi Gourav,",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w300,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "👋 Hi Gourav,",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w300,
+                          ),
                         ),
-                      ),
-                      Text(
-                        "Good Afternoon",
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.normal,
+                        Text(
+                          _getGreeting(),
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.normal,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-
-                  Spacer(),
-                  const Row(
-                    children: [
-                      Icon(
-                        Icons.notifications,
-                        size: 28,
-                        color: Color.fromARGB(99, 255, 255, 255),
-                      ),
-                      SizedBox(width: 16),
-                      CircleAvatar(
-                        radius: 20,
-                        backgroundColor: Colors.white,
-                        child: Icon(
-                          Icons.person,
-                          size: 40.0,
-                          color: Colors.grey,
+                      ],
+                    ),
+          
+                    Spacer(),
+                    const Row(
+                      children: [
+                        Icon(
+                          Icons.notifications,
+                          size: 28,
+                          color: Color.fromARGB(99, 255, 255, 255),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              SizedBox(height: 16),
-              HorizontalButtons(),
-              SizedBox(height: 20),
-              Text("Featuring Today", style: TextStyle(fontSize: 28)),
-              SizedBox(height: 20),
-              const _HorizontalBanners(),
-            ],
+                        SizedBox(width: 16),
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Colors.white,
+                          child: Icon(
+                            Icons.person,
+                            size: 40.0,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16),
+                HorizontalButtons(),
+                SizedBox(height: 20),
+                Text("Featuring Today", style: TextStyle(fontSize: 28)),
+                SizedBox(height: 20),
+                const _HorizontalBanners(),
+                SizedBox(height: 20),
+          
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text("Recently Played", style: TextStyle(fontSize: 28)),
+                    Spacer(),
+                    Text("See more", style: TextStyle(fontSize: 16)),
+                  ],
+                ),
+          
+                SizedBox(height: 20),
+                _HorizontalSongs(),
+                SizedBox(height: 20),
+                Text("Albums for you", style: TextStyle(fontSize: 28)),
+                SizedBox(height: 20),
+          
+                _HorizontalMixes()
+          
+              ],
+            ),
           ),
         ),
       ),
@@ -93,23 +125,23 @@ class HorizontalButtons extends StatefulWidget {
 class _HorizontalButtonsState extends State<HorizontalButtons> {
   int _selectedIndex = 0;
 
+  final List<String> categories = [
+    'All',
+    'Music',
+    'Podcasts',
+    'Gaming',
+    'Sports',
+    'News',
+    'Live',
+    'Comedy',
+    'Technology',
+    'Fashion',
+  ];
   @override
   Widget build(BuildContext context) {
-    final List<String> categories = [
-      'All',
-      'Music',
-      'Podcasts',
-      'Gaming',
-      'Sports',
-      'News',
-      'Live',
-      'Comedy',
-      'Technology',
-      'Fashion',
-    ];
-
     return SizedBox(
       height: 45.0,
+
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: categories.length,
@@ -145,6 +177,158 @@ class _HorizontalButtonsState extends State<HorizontalButtons> {
   }
 }
 
+class _HorizontalSongs extends StatefulWidget {
+  const _HorizontalSongs({super.key});
+
+  @override
+  State<_HorizontalSongs> createState() => _HorizontalSongsState();
+}
+
+class _HorizontalSongsState extends State<_HorizontalSongs> {
+  final List<_BannerItem> songs = const [
+    _BannerItem(imageUrl: AppVectors.song1, title: "Inside Out"),
+    _BannerItem(imageUrl: AppVectors.song2, title: "Young"),
+    _BannerItem(imageUrl: AppVectors.song3, title: "Beach House"),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 160, // increased height to fit image + text
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: songs.length,
+        itemBuilder: (BuildContext context, int index) {
+          final song = songs[index];
+          return Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Image + Play button overlay
+                Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: Image.asset(
+                        song.imageUrl,
+                        fit: BoxFit.cover,
+                        width: 120,
+                        height: 120,
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 8,
+                      left: 8,
+                      child: CircleAvatar(
+                        radius: 18,
+                        backgroundColor: Colors.white.withOpacity(0.9),
+                        child: const Icon(
+                          Icons.play_arrow,
+                          size: 22,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                // Song title below image
+                SizedBox(
+                  width: 120,
+                  child: Text(
+                    song.title,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Color.fromARGB(206, 255, 255, 255),
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+class _HorizontalMixes extends StatefulWidget {
+  const _HorizontalMixes({super.key});
+
+  @override
+  State<_HorizontalMixes> createState() => _HorizontalMixesState();
+}
+
+
+
+//FOR MIXES
+
+class _HorizontalMixesState extends State<_HorizontalMixes> {
+  final List<_BannerItem> songs = const [
+    _BannerItem(imageUrl: AppVectors.album1, title: "Saiyaara"),
+    _BannerItem(imageUrl: AppVectors.album2, title: "Love Aajkal"),
+    _BannerItem(imageUrl: AppVectors.album3, title: "Lunch Break"),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 160, // increased height to fit image + text
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: songs.length,
+        itemBuilder: (BuildContext context, int index) {
+          final song = songs[index];
+          return Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Image + Play button overlay
+                Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: Image.asset(
+                        song.imageUrl,
+                        fit: BoxFit.cover,
+                        width: 120,
+                        height: 120,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                // Song title below image
+                SizedBox(
+                  width: 120,
+                  child: Row(
+                    children: [
+                      Icon(Icons.explicit,color: const Color.fromARGB(104, 255, 255, 255),),
+                      SizedBox(width: 10,),
+                      Text(
+                        song.title,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Color.fromARGB(206, 255, 255, 255),
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
 class _BannerItem {
   final String imageUrl;
   final String title;
@@ -167,21 +351,28 @@ class _HorizontalBanners extends StatefulWidget {
 }
 
 class _HorizontalBannersState extends State<_HorizontalBanners> {
+  final List<_BannerItem> bannerImages = [
+    const _BannerItem(
+      imageUrl: AppVectors.banner1,
+      subtitle: "New",
+      title: "ENGLISH",
+      title2: "SONGS",
+    ),
+    const _BannerItem(
+      imageUrl: AppVectors.banner2,
+      title: 'LIVE NOW',
+      subtitle: 'Classib R&B',
+    ),
+    const _BannerItem(
+      imageUrl: AppVectors.banner3,
+      title: 'EDM ',
+      title2: 'BANGERS',
+      subtitle: 'This Week',
+    ),
+  ];
   @override
   Widget build(BuildContext context) {
-    final List<_BannerItem> bannerImages = [
-      const _BannerItem(
-        imageUrl: AppVectors.banner,
-        subtitle: "New",
-        title: "English",
-        title2: "Songs",
-      ),
-      const _BannerItem(
-        imageUrl: AppVectors.banner,
-        title: 'Live Now',
-        subtitle: 'Gaming Stream',
-      ),
-    ];
+    final textTheme = Theme.of(context).textTheme;
 
     return SizedBox(
       height: 150,
@@ -189,26 +380,50 @@ class _HorizontalBannersState extends State<_HorizontalBanners> {
         scrollDirection: Axis.horizontal,
         itemCount: bannerImages.length,
         itemBuilder: (BuildContext context, int index) {
+          final item = bannerImages[index];
+
           return SizedBox(
             width: 300,
             height: 150,
-            child: Stack(
-              children: [
-                Image.asset(bannerImages[index].imageUrl, fit: BoxFit.cover),
-
-                Padding(
-                  padding: const EdgeInsets.only(left: 16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("New", style: TextStyle(fontSize: 16)),
-                      Text("English", style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold)),
-                      Text("Songs",style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold)),
-                    ],
+            child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+              child: Stack(
+                children: [
+                  Image.asset(bannerImages[index].imageUrl, fit: BoxFit.cover),
+              
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (item.subtitle != null)
+                          Text(
+                            item.subtitle!,
+                            style: textTheme.labelLarge?.copyWith(
+                              color: Colors.white70,
+                            ),
+                          ),
+                        Text(
+                          item.title,
+                          style: textTheme.headlineSmall?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        if (item.title2 != null)
+                          Text(
+                            item.title2!,
+                            style: textTheme.headlineSmall?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         },
