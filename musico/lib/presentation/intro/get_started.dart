@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:musico/core/config/assets/app_vectors.dart';
+import 'package:musico/core/assets/app_vectors.dart';
 import 'package:musico/core/config/theme/app_colors.dart';
 import 'package:musico/presentation/auth/pages/signup.dart';
 

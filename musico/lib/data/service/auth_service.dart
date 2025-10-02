@@ -11,8 +11,12 @@ class AuthService {
   static const _storage = FlutterSecureStorage();
 
   static Future<void> _storeTokens(Map<String, dynamic> tokens) async {
-    final accessToken = tokens['accessToken'];
-    final refreshToken = tokens['refreshToken'];
+    final accessToken = tokens['access_token'];
+    final refreshToken = tokens['refresh_token'];
+    print("This is access token bruhhhhh - $accessToken");
+    print("THIS IS REFRESH TOKEN BRAHH - $refreshToken");
+    print("\n");
+
     if (accessToken != null && refreshToken != null) {
       await _storage.write(key: 'access_token', value: accessToken);
       await _storage.write(key: 'refresh_token', value: refreshToken);
@@ -32,10 +36,12 @@ class AuthService {
       );
 
       final responseData = json.decode(response.body);
+      final tokens =responseData["tokens"];
+              print("This is response data \n $tokens");
 
       if (response.statusCode == 200) {
         await _storeTokens(
-          responseData,
+          tokens,
         ); // CRITICAL FIX: Correctly call helper.
         return {
           "ok": true,
@@ -77,6 +83,7 @@ class AuthService {
       final responseData = json.decode(response.body);
 
       if (response.statusCode >= 200) {
+        print("This is response data \n $responseData");
         await _storeTokens(responseData['tokens']);
         // return ApiResponse.fromJson(responseData);
         return {"ok": true, "message": responseData["message"]};
@@ -140,3 +147,5 @@ class AuthService {
     return await _storage.read(key: 'access_token');
   }
 }
+
+
