@@ -18,4 +18,6 @@ class AppVectors {
   static const String album1 = '${basePath}Album1$format';
   static const String album2 = '${basePath}Album2$format';
   static const String album3 = '${basePath}Album3$format';
+
+  static const String reccomendation1 = '${basePath}Reccomendation1$format';
 }

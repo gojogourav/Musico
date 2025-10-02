@@ -27,87 +27,95 @@ class _HomePageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "👋 Hi Gourav,",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w300,
-                          ),
+    return SafeArea(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(
+            left: 16.0,
+            right: 16,
+            top: 16,
+            bottom: 120,
+          ),
+
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "👋 Hi Gourav,",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w300,
                         ),
-                        Text(
-                          _getGreeting(),
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.normal,
-                          ),
+                      ),
+                      Text(
+                        _getGreeting(),
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.normal,
                         ),
-                      ],
-                    ),
-          
-                    Spacer(),
-                    const Row(
-                      children: [
-                        Icon(
-                          Icons.notifications,
-                          size: 28,
-                          color: Color.fromARGB(99, 255, 255, 255),
+                      ),
+                    ],
+                  ),
+
+                  Spacer(),
+                  const Row(
+                    children: [
+                      Icon(
+                        Icons.notifications,
+                        size: 28,
+                        color: Color.fromARGB(99, 255, 255, 255),
+                      ),
+                      SizedBox(width: 16),
+                      CircleAvatar(
+                        radius: 20,
+                        backgroundColor: Colors.white,
+                        child: Icon(
+                          Icons.person,
+                          size: 40.0,
+                          color: Colors.grey,
                         ),
-                        SizedBox(width: 16),
-                        CircleAvatar(
-                          radius: 20,
-                          backgroundColor: Colors.white,
-                          child: Icon(
-                            Icons.person,
-                            size: 40.0,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                SizedBox(height: 16),
-                HorizontalButtons(),
-                SizedBox(height: 20),
-                Text("Featuring Today", style: TextStyle(fontSize: 28)),
-                SizedBox(height: 20),
-                const _HorizontalBanners(),
-                SizedBox(height: 20),
-          
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text("Recently Played", style: TextStyle(fontSize: 28)),
-                    Spacer(),
-                    Text("See more", style: TextStyle(fontSize: 16)),
-                  ],
-                ),
-          
-                SizedBox(height: 20),
-                _HorizontalSongs(),
-                SizedBox(height: 20),
-                Text("Albums for you", style: TextStyle(fontSize: 28)),
-                SizedBox(height: 20),
-          
-                _HorizontalMixes()
-          
-              ],
-            ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 16),
+              HorizontalButtons(),
+              SizedBox(height: 20),
+              Text("Featuring Today", style: TextStyle(fontSize: 28)),
+              SizedBox(height: 20),
+              const _HorizontalBanners(),
+              SizedBox(height: 20),
+
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text("Recently Played", style: TextStyle(fontSize: 28)),
+                  Spacer(),
+                  Text("See more", style: TextStyle(fontSize: 16)),
+                ],
+              ),
+
+              SizedBox(height: 20),
+              _HorizontalSongs(),
+              SizedBox(height: 20),
+              Text("Albums for you", style: TextStyle(fontSize: 28)),
+              SizedBox(height: 20),
+
+              _HorizontalMixes(),
+              SizedBox(height: 20),
+              Text("Todays Recommendations", style: TextStyle(fontSize: 28)),
+
+              SizedBox(height: 20),
+              SizedBox(width: double.infinity, child: ReccomendationsCard()),
+            ],
           ),
         ),
       ),
@@ -115,11 +123,153 @@ class _HomePageState extends State<Homepage> {
   }
 }
 
+class ReccomendationsCard extends StatefulWidget {
+  const ReccomendationsCard({Key? key}) : super(key: key);
+
+  @override
+  State<ReccomendationsCard> createState() => _ReccomendationCardState();
+}
+
 class HorizontalButtons extends StatefulWidget {
   const HorizontalButtons({super.key});
 
   @override
   State<HorizontalButtons> createState() => _HorizontalButtonsState();
+}
+
+class _ReccomendationCardState extends State<ReccomendationsCard> {
+  final List<Map<String, String>> _songs = List.generate(
+    22,
+    (index) => {'title': 'Song Title ${index + 1}', 'artist': 'Artist Name'},
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 12),
+      height: 450,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        gradient: const LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color.fromARGB(52, 255, 255, 255),
+            Color.fromARGB(59, 158, 158, 158),
+            Color.fromARGB(0, 224, 224, 224),
+          ],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.25),
+            blurRadius: 8,
+            offset: const Offset(2, 4),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: Image.asset(
+                    AppVectors.reccomendation1,
+                    width: 120,
+                    height: 120,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Peace",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        "22 songs",
+                        style: TextStyle(color: Colors.white70, fontSize: 16),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.favorite_border_rounded,
+                            color: Colors.white,
+                            size: 28,
+                          ),
+                          const SizedBox(width: 16),
+                          const Icon(
+                            Icons.more_vert,
+                            color: Colors.white,
+                            size: 28,
+                          ),
+                          const Spacer(),
+                          CircleAvatar(
+                            radius: 26,
+                            backgroundColor: Colors.white.withOpacity(0.9),
+                            child: const Icon(
+                              Icons.play_arrow,
+                              size: 30,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            Expanded(
+              child: ListView.builder(
+                itemCount: _songs.length,
+                itemBuilder: (context, index) {
+                  final song = _songs[index];
+                  return ListTile(
+                    leading: Text(
+                      '${index + 1}',
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 16,
+                      ),
+                    ),
+                    title: Text(
+                      song['title']!,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    subtitle: Text(
+                      song['artist']!,
+                      style: const TextStyle(color: Colors.white54),
+                    ),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class _HorizontalButtonsState extends State<HorizontalButtons> {
@@ -254,14 +404,13 @@ class _HorizontalSongsState extends State<_HorizontalSongs> {
     );
   }
 }
+
 class _HorizontalMixes extends StatefulWidget {
   const _HorizontalMixes({super.key});
 
   @override
   State<_HorizontalMixes> createState() => _HorizontalMixesState();
 }
-
-
 
 //FOR MIXES
 
@@ -306,8 +455,11 @@ class _HorizontalMixesState extends State<_HorizontalMixes> {
                   width: 120,
                   child: Row(
                     children: [
-                      Icon(Icons.explicit,color: const Color.fromARGB(104, 255, 255, 255),),
-                      SizedBox(width: 10,),
+                      Icon(
+                        Icons.explicit,
+                        color: const Color.fromARGB(104, 255, 255, 255),
+                      ),
+                      SizedBox(width: 10),
                       Text(
                         song.title,
                         style: const TextStyle(
@@ -386,11 +538,11 @@ class _HorizontalBannersState extends State<_HorizontalBanners> {
             width: 300,
             height: 150,
             child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(20),
               child: Stack(
                 children: [
                   Image.asset(bannerImages[index].imageUrl, fit: BoxFit.cover),
-              
+
                   Padding(
                     padding: const EdgeInsets.only(left: 16.0),
                     child: Column(
